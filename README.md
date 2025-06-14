@@ -148,20 +148,6 @@ export const base = {
 }
 ```
 
-## 📁 Project Structure
-
-```
-├── src/
-│   ├── liquidation-logger.ts    # Main liquidation event handler
-│   ├── index.ts                 # Token-specific event handlers
-│   └── tokens.ts                # Token definitions and utilities
-├── ponder.config.ts             # Ponder configuration
-├── ponder.schema.ts             # Database schema definitions
-└── logs/                        # Generated log files
-    ├── events.log              # General events log
-    ├── aave_liquidations.log   # Human-readable liquidations
-    └── aave_liquidations.json  # Structured JSON data
-```
 
 ## 🔄 Event Processing Flow
 
@@ -405,4 +391,22 @@ interface LiquidationEvent {
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
+
+src/
+├── index.ts           # Main entry point (listens for AAVE liquidation events)
+├── api/               # API endpoints for accessing tracked data
+│   └── index.ts
+├── services/          # Core business logic services
+│   ├── PriceService.ts
+│   └── DatabaseService.ts
+├── utils/             # Helper functions
+│   ├── format.ts
+│   └── logger.ts
+├── constants/         # Application constants
+│   ├── addresses.ts
+│   └── abis.ts
+├── types/             # TypeScript type definitions
+│   ├── events.ts
+│   └── tokens.ts
+└── tokens.ts          # Token configuration and registry
 

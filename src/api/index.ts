@@ -1,8 +1,7 @@
-import { db } from "ponder:api";
+import { db } from 'ponder:api';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serve } from '@hono/node-server';
-import { desc, sql } from "drizzle-orm";
 
 // Create the Hono app
 const app = new Hono();
@@ -14,8 +13,8 @@ app.use('/*', cors());
 // 1. GET all user positions
 app.get('/api/positions', async (c) => {
   try {
-    const positions = await db.select().from(sql`user_positions`);
-    
+    const positions = await db.execute('SELECT * FROM user_positions');
+
     return c.json({ success: true, positions });
   } catch (error) {
     console.error('Error fetching positions:', error);
@@ -27,10 +26,10 @@ app.get('/api/positions', async (c) => {
 app.get('/api/positions/:userAddress', async (c) => {
   try {
     const userAddress = c.req.param('userAddress').toLowerCase();
-    const positions = await db.select()
-      .from(sql`user_positions`)
-      .where(sql`user_address = ${userAddress}`);
-    
+    const positions = await db.execute(
+      `SELECT * FROM user_positions WHERE LOWER(user_address) = '${userAddress}'`
+    );
+
     return c.json({ success: true, positions });
   } catch (error) {
     console.error('Error fetching user positions:', error);
@@ -42,11 +41,10 @@ app.get('/api/positions/:userAddress', async (c) => {
 app.get('/api/transactions/:userAddress', async (c) => {
   try {
     const userAddress = c.req.param('userAddress').toLowerCase();
-    const transactions = await db.select()
-      .from(sql`user_transactions`)
-      .where(sql`user_address = ${userAddress}`)
-      .orderBy(sql`block_number desc`);
-    
+    const transactions = await db.execute(
+      `SELECT * FROM user_transactions WHERE LOWER(user_address) = '${userAddress}' ORDER BY block_number DESC`
+    );
+
     return c.json({ success: true, transactions });
   } catch (error) {
     console.error('Error fetching user transactions:', error);
@@ -58,12 +56,10 @@ app.get('/api/transactions/:userAddress', async (c) => {
 app.get('/api/market/:mTokenAddress', async (c) => {
   try {
     const mTokenAddress = c.req.param('mTokenAddress').toLowerCase();
-    const parameters = await db.select()
-      .from(sql`market_parameters`)
-      .where(sql`m_token_address = ${mTokenAddress}`)
-      .orderBy(sql`block_number desc`)
-      .limit(10);
-    
+    const parameters = await db.execute(
+      `SELECT * FROM market_parameters WHERE LOWER(m_token_address) = '${mTokenAddress}' ORDER BY block_number DESC LIMIT 10`
+    );
+
     return c.json({ success: true, parameters });
   } catch (error) {
     console.error('Error fetching market parameters:', error);

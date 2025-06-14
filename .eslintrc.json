@@ -1,3 +1,16 @@
 {
-  "extends": "ponder"
+  "extends": [
+    "ponder"
+  ],
+  "rules": {
+    "prefer-const": "error",
+    "no-var": "error"
+  },
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    ".ponder/",
+    "coverage/",
+    "*.js"
+  ]
 }
